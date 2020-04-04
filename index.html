@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Calculator</title>
     <meta charset="UTF-8">
@@ -8,50 +9,98 @@
 
 <body>
     <div class="container">
-        <input class="view" type="text">
+        <p class="rireki"></p>
+        <p class="view">0</p>
         <div class="row">
-            <button class="num">7</button>
-            <button class="num">8</button>
-            <button class="num">9</button>
-            <button class="num">÷</button>
+            <button class="btn" name="num">7</button>
+            <button class="btn" name="num">8</button>
+            <button class="btn" name="num">9</button>
+            <button class="btn" name="math">÷</button>
         </div>
         <div class="row">
-            <button class="num">4</button>
-            <button class="num">5</button>
-            <button class="num">6</button>
-            <button class="num">×</button>
+            <button class="btn" name="num">4</button>
+            <button class="btn" name="num">5</button>
+            <button class="btn" name="num">6</button>
+            <button class="btn" name="math">×</button>
         </div>
         <div class="row">
-            <button class="num">1</button>
-            <button class="num">2</button>
-            <button class="num">3</button>
-            <button class="num">−</button>
+            <button class="btn" name="num">1</button>
+            <button class="btn" name="num">2</button>
+            <button class="btn" name="num">3</button>
+            <button class="btn" name="math">-</button>
         </div>
         <div class="row">
-            <button class="num">.</button>
-            <button class="num">0</button>
-            <button class="num">+</button>
-            <button class="num">=</button>
+            <button class="btn" name="num">.</button>
+            <button class="btn" name="num">0</button>
+            <button class="btn" name="math">+</button>
+            <button class="btn" name="num">=</button>
         </div>
         <button class="clear">clear</button>
     </div>
 </body>
 <script>
-    var numbers = document.querySelectorAll(".num");
+    var numbers = document.querySelectorAll(".btn");
     var input = document.querySelector(".view")
+    var rireki = document.querySelector(".rireki");
+    var atai = 0;
+    var rirekiLength = 0;
+    var temp = 0;
+
     numbers.forEach(element => {
-        element.addEventListener("click",function(event){
-            var motoValue = input.value;
-            if(event.currentTarget.textContent != "="){
-                input.value = motoValue + event.currentTarget.textContent;
-            }else{
-                
+
+        element.addEventListener("click", function (event) {
+
+            var inputValue = input.textContent;
+            var btnText = event.currentTarget.textContent;
+            var name = event.currentTarget.name;
+
+            //演算を押した時
+            if (name == "math") {
+                var rirekiText = rireki.textContent;
+                rirekiText = replaceKakeWari(rirekiText);
+                rirekiText = rirekiText + inputValue;
+                var calAfterValue;
+                calAfterValue = rirekiText;
+                calAfterValue = replaceKakeWari(calAfterValue);
+                console.log(calAfterValue);
+                calAfterValue = eval(calAfterValue);
+                console.log(calAfterValue);
+
+                rireki.textContent = rirekiText + btnText;
+                input.textContent = calAfterValue;
+                temp = 0;
+                //数字or.を押した時    
+            } else {
+                if (temp != 0) {
+                    input.textContent = inputValue + btnText;
+                } else if (temp == 0) {
+                    input.textContent = "";
+                    inputValue = input.textContent;
+                    input.textContent = inputValue + btnText;
+                    temp += parseInt(btnText);
+                }
+
             }
-        },false)
+        }, false)
     });
     var clear = document.querySelector(".clear");
-    clear.addEventListener("click",function(){
-        input.value = "";
-    },false);
+    clear.addEventListener("click", function () {
+        input.textContent = "0";
+        rireki.textContent = "";
+        atai = 0;
+        temp = 0;
+    }, false);
+
+    function replaceKakeWari(str) {
+        if (str.match(/×/)) {
+            str = str.replace("×", "*");
+        }
+        if (str.match(/÷/)) {
+            str = str.replace("÷", "/");
+        }
+
+        return str;
+    }
 </script>
+
 </html>
